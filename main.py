@@ -1,4 +1,5 @@
 from enum import Enum
+import re
 
 
 class Type(Enum):
@@ -7,17 +8,59 @@ class Type(Enum):
     VAN = 'VAN'
     OTHER = 'OTHER'
 
-def get_get_price(vehicle) -> int:
-    if vehicle.type == Type.Motorcycle:
-        Motorcycle.price = 100
-    if vehicle.type == Type.OTHER:
-        vehicle.price = 50
-    if vehicle.type == Type.VAN:
-        vehicle.price = 100
-    if vehicle.type == Type.CONVERTIBLE:
-        vehicle.price = 150
-    if vehicle.type == Type.SPORTSCAR:
-        vehicle.price = 200
+def get_price(vehicle) -> int:
+    if isinstance(vehicle, Motorcycle):
+        return 100
+    elif hasattr(vehicle, 'type_of_car'):
+        if vehicle.type_of_car == Type.OTHER:
+            return 50
+        elif vehicle.type_of_car == Type.VAN:
+            return 100
+        elif vehicle.type_of_car == Type.CONVERTIBLE:
+            return 150
+        elif vehicle.type_of_car == Type.SPORTSCAR:
+            return 200
+    return 0
+
+class Car:
+    def __init__(self, make: str, model: str, year: int, type_of_car: Type) -> None:
+        self.make = make
+        self.model = model
+        self.year = year
+        self.type_of_car = type
+        self.price = 0
+
+
+class Motorcycle:
+    def __init__(self, make: str, model: str, year: int) -> None:
+        self.make = make
+        self.model = model
+        self.year = year
+        self.price = get_price(self)
+
+    def __repr__(self) -> str:
+        return f"Motorcycle({self.make}, {self.model}, {self.year})"
+
+    def __hash__(self) -> int:
+        return hash((self.make, self.model, self.year))
+
+    def get_make(self) -> str:
+        return self.make
+
+    def get_model(self) -> str:
+        return self.model
+
+    def get_year(self) -> int:
+        return self.year
+
+    def get_price(self) -> int:
+        return self.price
+
+
+class Client:
+
+
+class VehicleRental
 
 
 if __name__ == '__main__':
