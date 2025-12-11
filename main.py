@@ -27,7 +27,7 @@ class Car:
         self.make = make
         self.model = model
         self.year = year
-        self.type_of_car = type
+        self.type_of_car = type_of_car
         self.price = 0
 
 
