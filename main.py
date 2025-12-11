@@ -55,6 +55,61 @@ class Motorcycle:
 
     def get_price(self) -> int:
         return self.price
+    def date_checker(date: str) -> bool:
+        if not isinstance(date, str):
+            return False
+
+        pattern = re.compile(
+            r"^((0[1-9])|([12][0-9])|(3[01]))\.((0[1-9])|(1[0-2]))\.(19[0-9]{2}|[2-9][0-9]{3})$"
+        )
+        return pattern.fullmatch(date) is not None
+
+
+
+    print('def get_price(vehicle) -> int:')
+    print('-' * 30)
+    print(str(get_price(Motorcycle('Kawasaki', 'Ninja', 2019))) + '  # ' + '100')  # 100
+    print(str(get_price(Car('Hyundai', 'Solaris', 2022, Type.OTHER))) + '  # ' + '50')  # 50
+    print('')
+
+    print('def date_checker(date: str) -> bool:')
+    print('-' * 36)
+    print(str(date_checker('02.12.2025')) + '  # ' + 'True')  # True
+    print(str(date_checker('32.13.1899')) + '  # ' + 'False')  # False
+    print(str(date_checker('02/12/2025')) + '  # ' + 'False')  # False
+    print(str(date_checker('2.12.2025')) + '  # ' + 'False')  # False
+    print(str(date_checker(' 02.12.2025 ')) + '  # ' + 'False')  # False
+    print(str(date_checker(' ')) + '  # ' + 'False')  # False
+    print(str(date_checker('')) + '  # ' + 'False')  # False
+    print('')
+
+class Car:
+    def __init__(self, make: str, model: str, year: int, type_of_car: Type) -> None:
+        self.make = make
+        self.model = model
+        self.year = year
+        self.type_of_car = type_of_car
+        self.price = get_price(self)
+
+    if not isinstance(type_of_car, Type):
+        raise ValueError("Error")
+
+    def __repr__(self) -> str:
+        return f"Car({self.make}, {self.model}, {self.year}, {self.type_of_car})"
+
+    def __hash__(self) -> int:
+        return hash((self.make, self.model, self.year, self.type_of_car))
+
+    def get_make(self) -> str:
+        return self.make
+    def get_model(self) -> str:
+        return self.model
+    def get_year(self) -> int:
+        return self.year
+    def get_type(self) -> Type:
+        return self.type_of_car
+    def get_price(self) -> int:
+        return self.price
 
 
 class Client:
