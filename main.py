@@ -53,12 +53,16 @@ class Car:
 
     def get_make(self) -> str:
         return self.make
+
     def get_model(self) -> str:
         return self.model
+
     def get_year(self) -> int:
         return self.year
+
     def get_type(self) -> Type:
         return self.type_of_car
+
     def get_price(self) -> int:
         return self.price
 
@@ -85,41 +89,45 @@ class Motorcycle:
     def get_year(self) -> int:
         return self.year
 
+    def get_price(self) -> int:
+        return self.price
+
 
 class Client:
     def __init__(self, name: str, budget: int) -> None:
         self._name = name
         self._budget = budget
+        self._start_budget = budget
         self._bookings: list [Car | Motorcycle] = []
 
     def __repr__(self) -> str:
         return f"Client('{self._name}', {self._budget})"
 
     def book_vehicle(self, vehicle: Car | Motorcycle, date: str, vehicle_rental) -> bool:
-        uspeh = vehicle_rental.rent_vehicle(self, vehicle, date)
+        uspeh = vehicle_rental.rent_vehicle(vehicle, date, self)
         if uspeh:
             self._bookings.append(vehicle)
             return True
         return False
 
     def total_spent(self) -> int:
-        return self.start_budget - self.budget
+        return self._start_budget - self._budget
 
     def get_name(self) -> str:
-        return self.name
+        return self._name
 
     def get_budget(self) -> int:
-        return self.budget
+        return self._budget
 
     def get_bookings(self) -> list[Car | Motorcycle]:
-        return self.bookings
+        return self._bookings
 
 class VehicleRental:
     def __init__(self) -> None:
         self.earnings = 0
         self.motorcycles = []
         self.cars = []
-        self.taken = False
+        self.taken = {}
         self.clients = []
         self.vehicle_availability = {}
 
@@ -161,23 +169,25 @@ class VehicleRental:
             return False
         if not date_checker(date):
             return False
-        if vehicle not in self.taken:
+        if (vehicle not in self.cars and vehicle not in self.motorcycles):
             return False
         if not self.is_vehicle_available(vehicle, date):
             return False
+        if vehicle not in self.taken:
+            self.taken[vehicle] = []
         price = getattr(vehicle, "price", None)
         if price is None and hasattr(vehicle, "get_price"):
             price = vehicle.get_price()
         if price is None:
             return False
-        if client.budget < price:
+        if client.get_budget() < price:
             return False
 
-        client.budget -= price
+        client._budget -= price
         self.earnings += price
         self.taken[vehicle].append(date)
 
-        client.bookings.append(vehicle)
+        client._bookings.append(vehicle)
 
         if client not in self.clients:
             self.clients.append(client)
@@ -211,14 +221,29 @@ class VehicleRental:
         if not self.clients:
             return None
 
+        best_client = None
+        max_vehicles = -1
+
+        for client in self.clients:
+            num_vehicles = len(client._bookings)
+            if num_vehicles > max_vehicles:
+                max_vehicles = num_vehicles
+                best_client = client
+            elif num_vehicles == max_vehicles and num_vehicles > 0:
+                if best_client is None or client.total_spent() > best_client.total_spent():
+                    best_client = client
+
+        return best_client
+
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
-        return sorted(self.cars + self.motorcycles, key=lambda vehicle: len(self.vehicle_availability.get(vehicle, [])))
+        return sorted(self.cars + self.motorcycles,
+                     key=lambda vehicle: (-len(self.taken.get(vehicle, [])), -vehicle.get_price()))
 
     def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle] | ValueError:
         if isinstance(start_year, float) or isinstance(end_year, float):
-            raise ValueError(f"Start year and end year must be integers.")
+            raise ValueError("Start year and end year must be integers.")
         if end_year < start_year:
-            raise ValueError(f"End year must be greater than start year.")
+            raise ValueError("Start year cannot be greater than end year.")
         return [vehicle for vehicle in self.cars + self.motorcycles if start_year <= vehicle.get_year() <= end_year]
 
 
