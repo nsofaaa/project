@@ -208,7 +208,8 @@ class VehicleRental:
         return [car for car in self.cars if car.type_of_car == type_of_car]
 
     def get_best_client(self) -> Client | None:
-        pass
+        if not self.clients:
+            return None
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         return sorted(self.cars + self.motorcycles, key=lambda vehicle: len(self.vehicle_availability.get(vehicle, [])))
