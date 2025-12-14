@@ -85,6 +85,8 @@ class Motorcycle:
     def get_year(self) -> int:
         return self.year
 
+from __future__ import annotations
+
 class Client:
     def __init__(self, name: str, budget: int) -> None:
         self._name = name
@@ -120,7 +122,6 @@ class VehicleRental:
         self.cars = []
         self.taken = False
         self.clients = []
-        self.vehicle_availability = {}
 
     def get_money(self) -> int:
         pass
@@ -147,53 +148,28 @@ class VehicleRental:
         return False
 
     def is_vehicle_available(self, vehicle: Car | Motorcycle, date: str) -> bool:
-        if not date_checker(date):
-            return False
-
-        if vehicle in self.vehicle_availability and date in self.vehicle_availability[vehicle]:
-            return False
-
-        return True
+        if not self.taken
 
     def rent_vehicle(self, vehicle: Car | Motorcycle, date: str, client: Client) -> bool:
         pass
 
     def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
-        most_rented_vehicles = []
-
-        if not self.vehicle_availability:
-            return []
-
-        max_rentals = 0
-
-        for vehicle, dates in self.vehicle_availability.items():
-            rental_count = len(dates)
-            if rental_count > max_rentals:
-                max_rentals = rental_count
-                most_rented_vehicles = [vehicle]
-            elif rental_count == max_rentals:
-                most_rented_vehicles.append(vehicle)
-
-        return most_rented_vehicles
+        pass
 
     def find_vehicle_by_make(self, make: str) -> list[Car | Motorcycle]:
-        return [v for v in self.cars + self.motorcycles if v.get_make() == make]
+        pass
 
     def find_car_by_type(self, type_of_car: Type) -> list[Car]:
-        return [car for car in self.cars if car.type_of_car == type_of_car]
+        pass
 
     def get_best_client(self) -> Client | None:
         pass
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
-        return sorted(self.cars + self.motorcycles, key=lambda vehicle: len(self.vehicle_availability.get(vehicle, [])))
+        pass
 
     def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle] | ValueError:
-        if isinstance(start_year, float) or isinstance(end_year, float):
-            raise ValueError(f"Start year and end year must be integers.")
-        if end_year < start_year:
-            raise ValueError(f"End year must be greater than start year.")
-        return [vehicle for vehicle in self.cars + self.motorcycles if start_year <= vehicle.get_year() <= end_year]
+        pass
 
 
 if __name__ == '__main__':
