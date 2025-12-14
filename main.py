@@ -85,9 +85,35 @@ class Motorcycle:
     def get_year(self) -> int:
         return self.year
 
+from __future__ import annotations
 
 class Client:
+    def __init__(self, name: str, budget: int) -> None:
+        self._name = name
+        self._budget = budget
+        self._bookings: list [Car | Motorcycle] = []
 
+    def __repr__(self) -> str:
+        return f"Client('{self._name}', {self._budget})"
+
+    def book_vehicle(self, vehicle: Car | Motorcycle, date: str, vehicle_rental) -> bool:
+        uspeh = vehicle_rental.rent_vehicle(self, vehicle, date)
+        if uspeh:
+            self._bookings.append(vehicle)
+            return True
+        return False
+
+    def total_spent(self) -> int:
+        return self.start_budget - self.budget
+
+    def get_name(self) -> str:
+        return self.name
+
+    def get_budget(self) -> int:
+        return self.budget
+
+    def get_bookings(self) -> list[Car | Motorcycle]:
+        return self.bookings
 
 class VehicleRental:
     def __init__(self) -> None:
