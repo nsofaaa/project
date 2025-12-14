@@ -124,19 +124,19 @@ class VehicleRental:
         self.clients = []
 
     def get_money(self) -> int:
-        pass
+        return self.earnings
 
     def get_motorcycles(self) -> list[Motorcycle]:
-        pass
+        return self.motorcycles
 
     def get_cars(self) -> list[Car]:
-        pass
+        return self.cars
 
     def get_vehicle_bookings_dict(self) -> dict[Car | Motorcycle, list[str]]:
-        pass
+        return self.taken
 
     def get_clients(self) -> list[Client]:
-        pass
+        return self.clients
 
     def add_vehicle(self, vehicle: Car | Motorcycle) -> bool:
         if isinstance(vehicle, Car) and not self.cars:
@@ -148,10 +148,33 @@ class VehicleRental:
         return False
 
     def is_vehicle_available(self, vehicle: Car | Motorcycle, date: str) -> bool:
-        if not self.taken
 
     def rent_vehicle(self, vehicle: Car | Motorcycle, date: str, client: Client) -> bool:
-        pass
+        if vehicle is None or date is None or client is None:
+            return False
+        if not date_checker(date):
+            return False
+        if vehicle not in self.taken:
+            return False
+        if not self.is_vehicle_available(vehicle, date):
+            return False
+        price = getattr(vehicle, "price", None)
+        if price is None and hasattr(vehicle, "get_price"):
+            price = vehicle.get_price()
+        if price is None:
+            return False
+        if client.budget < price:
+            return False
+
+        client.budget -= price
+        self.earnings += price
+        self.taken[vehicle].append(date)
+
+        client.bookings.append(vehicle)
+
+        if client not in self.clients:
+            self.clients.append(client)
+        return True
 
     def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
         pass
@@ -163,7 +186,8 @@ class VehicleRental:
         pass
 
     def get_best_client(self) -> Client | None:
-        pass
+        if not self.clients:
+            return None
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         pass
