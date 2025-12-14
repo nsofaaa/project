@@ -1,5 +1,7 @@
+from __future__ import annotations
 from enum import Enum
 import re
+from tracemalloc import take_snapshot
 
 
 class Type(Enum):
@@ -87,7 +89,61 @@ class Motorcycle:
 class Client:
 
 
-class VehicleRental
+class VehicleRental:
+    def __init__(self) -> None:
+        self.earnings = 0
+        self.motorcycles = []
+        self.cars = []
+        self.taken = False
+        self.clients = []
+
+    def get_money(self) -> int:
+        pass
+
+    def get_motorcycles(self) -> list[Motorcycle]:
+        pass
+
+    def get_cars(self) -> list[Car]:
+        pass
+
+    def get_vehicle_bookings_dict(self) -> dict[Car | Motorcycle, list[str]]:
+        pass
+
+    def get_clients(self) -> list[Client]:
+        pass
+
+    def add_vehicle(self, vehicle: Car | Motorcycle) -> bool:
+        if isinstance(vehicle, Car) and not self.cars:
+            self.cars.append(vehicle)
+            return True
+        elif isinstance(vehicle, Motorcycle) and not self.motorcycles:
+            self.motorcycles.append(vehicle)
+            return True
+        return False
+
+    def is_vehicle_available(self, vehicle: Car | Motorcycle, date: str) -> bool:
+        if not self.taken
+
+    def rent_vehicle(self, vehicle: Car | Motorcycle, date: str, client: Client) -> bool:
+        pass
+
+    def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
+        pass
+
+    def find_vehicle_by_make(self, make: str) -> list[Car | Motorcycle]:
+        pass
+
+    def find_car_by_type(self, type_of_car: Type) -> list[Car]:
+        pass
+
+    def get_best_client(self) -> Client | None:
+        pass
+
+    def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
+        pass
+
+    def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle] | ValueError:
+        pass
 
 
 if __name__ == '__main__':
